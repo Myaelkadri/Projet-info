@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class GraphLoader {
+public class GraphLoader_theme1_2 {
 
     public static Graph loadGraph(String filename) {
         Graph g = null;
