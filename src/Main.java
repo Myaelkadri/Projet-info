@@ -122,6 +122,16 @@ public class Main {
 
                 else if(theme1prob2 == 2){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 2 ===");
+
+                        List<Integer> odd = AlgorithmsTheme1Prob2.findOddVertices(g);
+
+                        if (odd.size() != 2) {
+                            System.out.println("Impossible : le graphe n'a pas exactement 2 sommets impairs.");
+                        } else {
+                            List<Integer> tournee = AlgorithmsTheme1Prob2.cas2_tournee(g);
+                            AlgorithmsTheme1Prob2.afficherTourneeDetaillee(g, tournee);
+                        }
+
                 }
                 else if( theme1prob2 == 3){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 3 ===");

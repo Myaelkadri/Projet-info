@@ -96,4 +96,22 @@ public class Graph {
 
         return sb.toString();
     }
+    public Graph copy() {
+        // nouveau graphe avec le même nombre de sommets
+        Graph g2 = new Graph(this.n);
+
+        // si tu as un champ "oriented" dans Graph, garde-le
+        // g2.oriented = this.oriented;
+
+        // recopier toute la liste d’adjacence
+        for (int u = 0; u < this.n; u++) {
+            for (Edge e : this.adj.get(u)) {
+                // on recrée un nouvel Edge avec les mêmes infos
+                g2.adj.get(u).add(new Edge(e.to, e.weight, e.streetName));
+            }
+        }
+
+        return g2;
+    }
+
 }
