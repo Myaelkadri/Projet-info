@@ -1,0 +1,13 @@
+6
+0 1 70 RueA
+1 0 70 RueA
+0 3 250 RueB
+3 0 250 RueB
+1 2 200 RueC
+2 1 200 RueC
+3 5 70 RueD
+5 3 70 RueD
+2 5 50 RueE
+5 2 50 RueE
+2 4 30 RueF
+4 2 30 RueF

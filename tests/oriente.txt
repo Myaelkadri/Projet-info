@@ -1,0 +1,8 @@
+7
+0 3 120 RueA
+3 1 150 RueB
+3 4 340 RueC
+4 6 50 RueD
+1 2 50 RueE
+2 6 95 RueF
+5 2 30 RueG

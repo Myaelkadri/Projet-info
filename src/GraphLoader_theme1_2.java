@@ -1,5 +1,5 @@
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Scanner;
 
 public class GraphLoader_theme1_2 {
 
@@ -14,14 +14,14 @@ public class GraphLoader_theme1_2 {
             int n = sc.nextInt();
             g = new Graph(n);
 
-            // Lire chaque ligne (u v distance nom_de_rue)
+            // Lire chaque ligne : u v distance nom_de_rue
             while (sc.hasNext()) {
 
                 int u = sc.nextInt();
                 int v = sc.nextInt();
-                double w = sc.nextDouble();
+                int w = sc.nextInt();
 
-                String street = sc.next(); // nom_de_rue (sans espaces)
+                String street = sc.next(); // nom de rue (si espaces → remplacer par '_')
 
                 g.addEdge(u, v, w, street);
             }

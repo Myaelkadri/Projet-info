@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Graph {
 
-    private int n;  // nombre de sommets
+    int n;  // nombre de sommets
     private List<List<Edge>> adj;  // liste d’adjacence
     private boolean oriented = false; // utile si tu veux gérer les sens uniques
 
@@ -26,13 +26,7 @@ public class Graph {
     //   Ajouter une arête
     // -------------------------
     public void addEdge(int u, int v, double w, String street) {
-
         adj.get(u).add(new Edge(v, w, street));
-
-        // si NON orienté → ajouter dans les deux sens
-        if (!oriented) {
-            adj.get(v).add(new Edge(u, w, street));
-        }
     }
 
     // -------------------------
