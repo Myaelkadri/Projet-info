@@ -139,8 +139,21 @@ public class Main {
             }
         }
 
-
         else if (theme ==2){
+
+            System.out.print("\nChoisir une Approche (1 ou 2) : ");
+            int approche = sc.nextInt();
+            sc.nextLine();
+
+            if (approche == 1){
+                // Approche 1
+            }else if (approche == 2){
+                Graph g = GraphLoader_theme1_2.loadGraph(filename);
+
+                List<Integer> order = AlgorithmsTheme2.approcheMST(g);
+                AlgorithmsTheme2.afficherTournee(g, order);
+            }
+
 
         }
         else if (theme == 3) {
