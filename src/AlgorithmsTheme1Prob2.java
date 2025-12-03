@@ -169,10 +169,228 @@ public class AlgorithmsTheme1Prob2 {
     }
 
 
+    // Cas 3
+// ----------- Trouver les sommets impairs -----------
+    public static List<Integer> sommetsImpairs(Graph g) {
+        List<Integer> odd = new ArrayList<>();
+        for (int u = 0; u < g.n; u++) {
+            if (g.getNeighbors(u).size() % 2 != 0) {
+                odd.add(u);
+            }
+        }
+        return odd;
+    }
 
 
+    // ----------- Générer tous les appariements possibles des sommets impairs -----------
+    private static List<int[]> genererAppariements(List<Integer> odd) {
 
 
+        List<int[]> res = new ArrayList<>();
 
+
+        if (odd.isEmpty()) return res;
+
+
+        int a = odd.get(0);
+
+
+        if (odd.size() == 2) {
+            res.add(new int[]{odd.get(0), odd.get(1)});
+            return res;
+        }
+
+
+        for (int i = 1; i < odd.size(); i++) {
+
+
+            int b = odd.get(i);
+
+
+            List<Integer> rest = new ArrayList<>(odd);
+            rest.remove(Integer.valueOf(a));
+            rest.remove(Integer.valueOf(b));
+
+
+            List<int[]> sub = genererAppariements(rest);
+
+
+            for (int[] p : sub) {
+                int[] pair = new int[p.length + 2];
+                pair[0] = a;
+                pair[1] = b;
+                System.arraycopy(p, 0, pair, 2, p.length);
+                res.add(pair);
+            }
+        }
+
+
+        return res;
+    }
+
+
+    // ----------- Distance via Dijkstra (déjà codé dans prob 1) -----------
+    private static double dijkstraDistance(Graph g, int src, int dest) {
+        AlgorithmsTheme1Prob1.PathResult pr = AlgorithmsTheme1Prob1.dijkstra(g, src);
+        return pr.dist[dest];
+    }
+
+
+    // ----------- Chemin via Dijkstra -----------
+    private static List<Integer> dijkstraPath(Graph g, int src, int dest) {
+        AlgorithmsTheme1Prob1.PathResult pr = AlgorithmsTheme1Prob1.dijkstra(g, src);
+        return AlgorithmsTheme1Prob1.getPath(pr.parent, dest);
+    }
+
+
+    // ----------- Trouver le poids et nom de rue d'une arête -----------
+    private static double findWeight(Graph g, int u, int v) {
+        for (Edge e : g.getNeighbors(u)) {
+            if (e.to == v) return e.weight;
+        }
+        return 0;
+    }
+
+
+    private static String findStreet(Graph g, int u, int v) {
+        for (Edge e : g.getNeighbors(u)) {
+            if (e.to == v) return e.streetName;
+        }
+        return "";
+    }
+
+
+    public static List<Integer> cas3_CPP(Graph g) {
+
+
+        // 1. Récupération des sommets impairs
+        List<Integer> odd = sommetsImpairs(g);
+
+
+        if (odd.size() == 0) {
+            System.out.println("Cas 1 détecté : tous les sommets sont pairs → cycle eulérien.");
+            return eulerianCycle(g);
+        }
+
+
+        if (odd.size() == 2) {
+            System.out.println("Cas 2 détecté : exactement 2 sommets impairs.");
+            return cas2_tournee(g);
+        }
+
+
+        System.out.println("\n Cas 3 détecté : " + odd.size() + " sommets impairs.");
+        // 2. Générer tous les appariements
+        List<int[]> pairings = genererAppariements(odd);
+
+
+        double best = Double.MAX_VALUE;
+        int[] bestPairing = null;
+
+
+        // 3. Tester chaque appariement
+        for (int[] P : pairings) {
+
+
+            double sum = 0;
+
+
+            for (int i = 0; i < P.length; i += 2) {
+                sum += dijkstraDistance(g, P[i], P[i + 1]);
+            }
+
+
+            if (sum < best) {
+                best = sum;
+                bestPairing = P;
+            }
+        }
+
+
+        System.out.println("Meilleur appariement trouvé : " + Arrays.toString(bestPairing));
+
+
+        // 4. Dupliquer les chemins correspondant à l’appariement
+        Graph g2 = g.copy();
+
+
+        for (int i = 0; i < bestPairing.length; i += 2) {
+
+
+            int a = bestPairing[i];
+            int b = bestPairing[i + 1];
+
+
+            List<Integer> path = dijkstraPath(g, a, b);
+
+
+            for (int j = 0; j < path.size() - 1; j++) {
+
+
+                int u = path.get(j);
+                int v = path.get(j + 1);
+
+
+                double w = findWeight(g, u, v);
+                String s = findStreet(g, u, v);
+
+
+                g2.addEdge(u, v, w, s);
+                g2.addEdge(v, u, w, s);
+            }
+        }
+
+
+        // 5. Tous les sommets sont pairs → cycle eulérien final
+        return eulerianCycle(g2);
+    }
+
+
+    // ----------- AFFICHAGE -----------
+    public static void afficher(Graph g, List<Integer> cycle) {
+
+
+        System.out.println("\n=== Itinéraire ===\n");
+
+
+        double total = 0;
+
+
+        for (int i = 0; i < cycle.size() - 1; i++) {
+
+
+            int u = cycle.get(i);
+            int v = cycle.get(i + 1);
+
+
+            Edge chosen = g.getEdge(u, v);
+
+
+            String from = "" + u;
+            String to   = "" + v;
+
+
+            if (chosen != null) {
+                System.out.println(
+                        " Depuis " + from + " allez vers " + to +
+                                " par " + chosen.streetName +
+                                "(" + chosen.weight + " m)"
+                );
+
+
+                total += chosen.weight;
+
+
+            } else {
+                System.out.println(
+                        " Depuis " + from + " allez vers " + to +
+                                " (arête dupliquée pour la tournée)"
+                );
+            }
+        }
+
+
+        System.out.println("\n Distance totale : " + total + " m \n");
+    }
 
 }

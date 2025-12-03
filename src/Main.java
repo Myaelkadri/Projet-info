@@ -135,6 +135,9 @@ public class Main {
                 }
                 else if( theme1prob2 == 3){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 3 ===");
+                    List<Integer> tour = AlgorithmsTheme1Prob2.cas3_CPP(g);
+                    AlgorithmsTheme1Prob2.afficher(g, tour);
+
                 }
             }
         }
