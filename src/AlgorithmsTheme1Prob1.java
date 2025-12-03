@@ -1,52 +1,45 @@
-import java.util.*;
-
 public class AlgorithmsTheme1Prob1 {
 
-    // -------------------------------------------------------------------------
-    // Résultat de Dijkstra : distances + parents
-    // -------------------------------------------------------------------------
+    import java.util.*;
+
     public static class PathResult {
-        public double[] dist;
+        public int[] dist;
         public int[] parent;
 
-        public PathResult(double[] dist, int[] parent) {
+        public PathResult(int[] dist, int[] parent) {
             this.dist = dist;
             this.parent = parent;
         }
     }
 
-    // -------------------------------------------------------------------------
-    // 1) Dijkstra classique
-    // -------------------------------------------------------------------------
     public static PathResult dijkstra(Graph g, int source) {
+        int n = g.n;
+        int[] dist = new int[n];
+        int[] parent = new int[n];
+        boolean[] visited = new boolean[n];
 
-        double[] dist = new double[g.n];
-        int[] parent = new int[g.n];
-        boolean[] visited = new boolean[g.n];
-
-        Arrays.fill(dist, Double.POSITIVE_INFINITY);
+        Arrays.fill(dist, Integer.MAX_VALUE);
         Arrays.fill(parent, -1);
-
         dist[source] = 0;
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingDouble(a -> a[1]));
-        pq.add(new int[]{source, 0}); // {sommet, distance}
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        pq.add(new int[]{source, 0});
 
         while (!pq.isEmpty()) {
-            int[] current = pq.poll();
-            int u = current[0];
+            int[] curr = pq.poll();
+            int u = curr[0];
 
             if (visited[u]) continue;
             visited[u] = true;
 
             for (Edge e : g.getNeighbors(u)) {
                 int v = e.to;
-                double w = e.weight;
+                int w = (int) e.weight;
 
                 if (dist[u] + w < dist[v]) {
                     dist[v] = dist[u] + w;
                     parent[v] = u;
-                    pq.add(new int[]{v, (int) dist[v]});
+                    pq.add(new int[]{v, dist[v]});
                 }
             }
         }
@@ -54,13 +47,9 @@ public class AlgorithmsTheme1Prob1 {
         return new PathResult(dist, parent);
     }
 
-    // -------------------------------------------------------------------------
-    // 2) Reconstruire un chemin depuis source → cible
-    // -------------------------------------------------------------------------
-    public static List<Integer> getPath(int[] parent, int cible) {
-
+    public static List<Integer> getPath(int[] parent, int dest) {
         List<Integer> path = new ArrayList<>();
-        int curr = cible;
+        int curr = dest;
 
         while (curr != -1) {
             path.add(curr);
@@ -71,75 +60,48 @@ public class AlgorithmsTheme1Prob1 {
         return path;
     }
 
-    // -------------------------------------------------------------------------
-    // 3) Affichage détaillé : rues, distances, temps estimé
-    // -------------------------------------------------------------------------
-    public static void afficherItineraire(Graph g, PathResult res, int source, int cible) {
+    public static List<Edge> getPathEdges(Graph g, int[] parent, int dest) {
+        List<Edge> edges = new ArrayList<>();
+        int curr = dest;
 
-        List<Integer> chemin = getPath(res.parent, cible);
+        while (parent[curr] != -1) {
+            int from = parent[curr];
+            int to = curr;
 
-        System.out.println("\n=== ITINÉRAIRE OPTIMAL ===");
-        System.out.println("Chemin (sommets) : " +
-                chemin.toString().replace(", ", " -> ").replace("[", "").replace("]", ""));
-
-        double totalDistance = 0;
-        List<String> ruesUtilisees = new ArrayList<>();
-
-        System.out.println("\n=== DÉTAILS ===");
-
-        for (int i = 0; i < chemin.size() - 1; i++) {
-            int u = chemin.get(i);
-            int v = chemin.get(i + 1);
-
-            Edge e = g.getEdge(u, v);
-            if (e == null) continue;
-
-            totalDistance += e.weight;
-            ruesUtilisees.add(e.streetName);
-
-            double minutes = (e.weight / 1000.0) / 15.0 * 60.0; // 15 km/h
-
-            System.out.printf("\n-> %s\n", e.streetName);
-            System.out.println("  " + u + " -> " + v);
-            System.out.println("  Distance : " + e.weight + " m");
-            System.out.printf("  Temps estimé : %.1f minutes\n", minutes);
+            for (Edge e : g.getNeighbors(from)) {
+                if (e.to == to) {
+                    edges.add(e);
+                    break;
+                }
+            }
+            curr = from;
         }
 
-        // Résumé
-        double totalMinutes = (totalDistance / 1000.0) / 15.0 * 60.0;
+        Collections.reverse(edges);
+        return edges;
+    }
 
-        System.out.println("\n=== RÉSUMÉ ===");
-        System.out.println("Rues empruntées : " + String.join(" → ", ruesUtilisees));
-        System.out.println("Distance totale : " + totalDistance + " m");
-        System.out.printf("Durée estimée : %.1f minutes\n", totalMinutes);
+    public static void printTourDetails(Graph g, List<Integer> tour) {
+        System.out.println("\n=== Itinéraire détaillé ===");
 
-        // Rues non utilisées
-        System.out.println("\n=== RUES NON UTILISÉES ===");
+        double total = 0;
 
-        Set<String> toutesRues = new HashSet<>();
-        for (int u = 0; u < g.n; u++) {
-            for (Edge e : g.getNeighbors(u)) {
-                toutesRues.add(e.streetName);
+        for (int i = 0; i < tour.size() - 1; i++) {
+            int u = tour.get(i);
+            int v = tour.get(i + 1);
+
+            PathResult pr = dijkstra(g, u);
+            List<Edge> edges = getPathEdges(g, pr.parent, v);
+
+            int from = u;
+
+            for (Edge e : edges) {
+                System.out.println(from + " -> " + e.to + " : " + e.streetName + " (" + e.weight + " m)");
+                total += e.weight;
+                from = e.to;
             }
         }
 
-        Set<String> utilisees = new HashSet<>(ruesUtilisees);
-
-        List<String> nonUtilisees = new ArrayList<>();
-        for (String r : toutesRues) {
-            if (!utilisees.contains(r)) {
-                nonUtilisees.add(r);
-            }
-        }
-
-        if (nonUtilisees.isEmpty()) {
-            System.out.println("Toutes les rues sont utilisées.");
-        } else {
-            System.out.println("Rues non sélectionnées : " + String.join(", ", nonUtilisees));
-            System.out.println("\nRaisons possibles :");
-            System.out.println(" - Elles ne font pas partie du plus court chemin.");
-            System.out.println(" - Une autre route est plus rapide.");
-            System.out.println(" - Dijkstra sélectionne uniquement les segments optimaux.");
-        }
+        System.out.println("\nDistance totale = " + total + " m");
     }
 }
