@@ -22,22 +22,22 @@ public class GraphLoader_theme3 {
             File file = new File(filename);
             Scanner sc = new Scanner(file);
 
-            // ---------- LECTURE NB SECTEURS ----------
+            // LECTURE NB SECTEURS
             int n = sc.nextInt();
             g = new Graph(n);
 
-            // ---------- LECTURE QUANTITÉS ----------
+            //LECTURE QUANTITÉS
             quantities = new int[n];
             for (int i = 0; i < n; i++) {
                 quantities[i] = sc.nextInt();
             }
 
-            // ---------- LECTURE DES VOISINAGES ----------
+            // LECTURE DES VOISINAGES
             while (sc.hasNext()) {
                 int u = sc.nextInt();
                 int v = sc.nextInt();
 
-                // Pour le thème 3, pas de poids → on met 1 ou 0
+                // Pour le thème 3, pas de poids donc on met 1 ou 0
                 g.addEdge(u, v, 1, "");
             }
 

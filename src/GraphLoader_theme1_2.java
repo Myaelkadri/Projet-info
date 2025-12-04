@@ -10,18 +10,18 @@ public class GraphLoader_theme1_2 {
             File file = new File(filename);
             Scanner sc = new Scanner(file);
 
-            // --------- Lire le nombre de sommets ----------
+            // Lire le nombre de sommets
             int n = sc.nextInt();
             g = new Graph(n);
 
-            // Lire chaque ligne : u v distance nom_de_rue
+            //Lire chaque ligne : u v distance nom_de_rue
             while (sc.hasNext()) {
 
                 int u = sc.nextInt();
                 int v = sc.nextInt();
                 int w = sc.nextInt();
 
-                String street = sc.next(); // nom de rue (si espaces → remplacer par '_')
+                String street = sc.next();
 
                 g.addEdge(u, v, w, street);
             }

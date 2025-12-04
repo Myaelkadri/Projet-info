@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AlgorithmsTheme3 {
+
+     // Naive
     public static int[] colorNaive(Graph g) {
         int n = g.getNbVertices();
         int[] color = new int[n];
@@ -33,9 +35,8 @@ public class AlgorithmsTheme3 {
         return color;
     }
 
-    // ----------------------------------------------------------
-    //   WELSH & POWELL
-    // ----------------------------------------------------------
+
+    //  WELSH & POWELL
     public static int[] welshPowell(Graph g) {
 
         int n = g.getNbVertices();
@@ -74,7 +75,7 @@ public class AlgorithmsTheme3 {
         return color;
     }
 
-    // Vérifie si v ne peut pas prendre la couleur actuelle
+    // On vérifie si v ne peut pas prendre la couleur actuelle
     private static boolean areAdjacent(Graph g, int u, int v, int[] color, int colorToAssign) {
 
         // Vérifier si u et v sont voisins
@@ -90,6 +91,7 @@ public class AlgorithmsTheme3 {
         return false;
     }
 
+    // La contrainte
     public static List<List<Integer>> planificationAvecCapacite(Graph g, int[] quantities, int capacite, int[] colors) {
 
         int maxColor = 0;

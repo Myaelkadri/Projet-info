@@ -170,7 +170,7 @@ public class AlgorithmsTheme1Prob2 {
 
 
     // Cas 3
-// ----------- Trouver les sommets impairs -----------
+    // Trouver les sommets impairs
     public static List<Integer> sommetsImpairs(Graph g) {
         List<Integer> odd = new ArrayList<>();
         for (int u = 0; u < g.n; u++) {
@@ -180,9 +180,7 @@ public class AlgorithmsTheme1Prob2 {
         }
         return odd;
     }
-
-
-    // ----------- Générer tous les appariements possibles des sommets impairs -----------
+    // Générer tous les appariements possibles des sommets impairs
     private static List<int[]> genererAppariements(List<Integer> odd) {
 
 
@@ -227,39 +225,29 @@ public class AlgorithmsTheme1Prob2 {
 
         return res;
     }
-
-
-    // ----------- Distance via Dijkstra (déjà codé dans prob 1) -----------
+    // Distance via Dijkstra (déjà codé dans prob 1)
     private static double dijkstraDistance(Graph g, int src, int dest) {
         AlgorithmsTheme1Prob1.PathResult pr = AlgorithmsTheme1Prob1.dijkstra(g, src);
         return pr.dist[dest];
     }
-
-
-    // ----------- Chemin via Dijkstra -----------
+    //  Chemin via Dijkstra
     private static List<Integer> dijkstraPath(Graph g, int src, int dest) {
         AlgorithmsTheme1Prob1.PathResult pr = AlgorithmsTheme1Prob1.dijkstra(g, src);
         return AlgorithmsTheme1Prob1.getPath(pr.parent, dest);
     }
-
-
-    // ----------- Trouver le poids et nom de rue d'une arête -----------
+    // Trouver le poids et nom de rue d'une arête
     private static double findWeight(Graph g, int u, int v) {
         for (Edge e : g.getNeighbors(u)) {
             if (e.to == v) return e.weight;
         }
         return 0;
     }
-
-
     private static String findStreet(Graph g, int u, int v) {
         for (Edge e : g.getNeighbors(u)) {
             if (e.to == v) return e.streetName;
         }
         return "";
     }
-
-
     public static List<Integer> cas3_CPP(Graph g) {
 
 
@@ -344,9 +332,7 @@ public class AlgorithmsTheme1Prob2 {
         // 5. Tous les sommets sont pairs → cycle eulérien final
         return eulerianCycle(g2);
     }
-
-
-    // ----------- AFFICHAGE -----------
+    // AFFICHAGE
     public static void afficher(Graph g, List<Integer> cycle) {
 
 
