@@ -10,7 +10,7 @@ public class GraphLoader_theme1_2 {
             File file = new File(filename);
             Scanner sc = new Scanner(file);
 
-            // ---------- Lire le nombre de sommets ----------
+            // --------- Lire le nombre de sommets ----------
             int n = sc.nextInt();
             g = new Graph(n);
 
