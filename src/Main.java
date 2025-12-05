@@ -153,10 +153,10 @@ public class Main {
             }else if (approche == 2){
                 Graph g = GraphLoader_theme1_2.loadGraph(filename);
 
-                List<Integer> order = AlgorithmsTheme2.approcheMST(g);
-                AlgorithmsTheme2.afficherTournee(g, order);
-            }
+                List<Integer> route = AlgorithmsTheme2.computeMSTRoute(g);
+                AlgorithmsTheme2.afficherTourneeMST(g, route);
 
+            }
 
         }
         else if (theme == 3) {

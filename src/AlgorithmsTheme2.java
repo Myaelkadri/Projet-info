@@ -72,6 +72,11 @@ public class AlgorithmsTheme2 {
 
 
     // Approche 2
+
+
+// 1. PRIM — Construction de l’Arbre Couvrant Minimum (MST)
+
+
     public static List<int[]> primMST(Graph g) {
         int n = g.n;
         boolean[] visited = new boolean[n];
@@ -83,14 +88,14 @@ public class AlgorithmsTheme2 {
         Arrays.fill(parent, -1);
 
 
-        minWeight[0] = 0;  // départ arbitraire
+        minWeight[0] = 0; // départ arbitraire
 
 
         for (int i = 0; i < n; i++) {
+
+
+            // 1) choisir le sommet non visité le plus proche
             int u = -1;
-
-
-            // 1) chercher le sommet non visité avec le minWeight le plus faible
             for (int v = 0; v < n; v++) {
                 if (!visited[v] && (u == -1 || minWeight[v] < minWeight[u])) {
                     u = v;
@@ -101,7 +106,7 @@ public class AlgorithmsTheme2 {
             visited[u] = true;
 
 
-            // 2) relâcher toutes les arêtes sortantes
+            // 2) relaxation des arêtes
             for (Edge e : g.getNeighbors(u)) {
                 if (!visited[e.to] && e.weight < minWeight[e.to]) {
                     minWeight[e.to] = e.weight;
@@ -122,6 +127,9 @@ public class AlgorithmsTheme2 {
     }
 
 
+
+
+    // 2. Construire la liste d’adjacence du MST
     private static List<List<Integer>> buildMSTAdj(int n, List<int[]> mstEdges) {
         List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < n; i++) adj.add(new ArrayList<>());
@@ -137,54 +145,107 @@ public class AlgorithmsTheme2 {
     }
 
 
-    private static void dfsMST(int u, boolean[] visited, List<Integer> order, List<List<Integer>> mstAdj) {
+    // 3. DFS Préfixe pour donner un ordre de visite
+    private static void dfs(int u, boolean[] visited, List<Integer> order, List<List<Integer>> adj) {
         visited[u] = true;
         order.add(u);
 
 
-        for (int v : mstAdj.get(u)) {
-            if (!visited[v]) dfsMST(v, visited, order, mstAdj);
+        for (int v : adj.get(u)) {
+            if (!visited[v]) dfs(v, visited, order, adj);
         }
     }
 
 
-    public static List<Integer> approcheMST(Graph g) {
 
 
-        // 1. calculer l’arbre couvrant
+    // 4. Shortcutting : supprimer les répétitions
+    private static List<Integer> shortcut(List<Integer> order) {
+        Set<Integer> seen = new HashSet<>();
+        List<Integer> result = new ArrayList<>();
+
+
+        for (int x : order) {
+            if (!seen.contains(x)) {
+                result.add(x);
+                seen.add(x);
+            }
+        }
+
+
+        result.add(order.get(0)); // retour au dépôt
+
+
+        return result;
+    }
+
+
+
+
+    //  MST + DFS + SHORTCUTTING
+    public static List<Integer> computeMSTRoute(Graph g) {
+
+
+        // 1. Construire le MST
         List<int[]> mst = primMST(g);
 
 
-        // 2. construire la liste d’adjacence du MST
-        List<List<Integer>> mstAdj = buildMSTAdj(g.n, mst);
+        // 2. Construire l'adjacence du MST
+        List<List<Integer>> adj = buildMSTAdj(g.n, mst);
 
 
-        // 3. faire un parcours DFS depuis le sommet 0
-        List<Integer> order = new ArrayList<>();
+        // 3. DFS préfixe depuis le dépôt 0
         boolean[] visited = new boolean[g.n];
-        dfsMST(0, visited, order, mstAdj);
+        List<Integer> order = new ArrayList<>();
+        dfs(0, visited, order, adj);
 
 
-        return order;
+        // 4. Shortcutting
+        List<Integer> finalRoute = shortcut(order);
+
+
+        return finalRoute;
     }
 
-    public static void afficherTournee(Graph g, List<Integer> order) {
+
+
+
+    // 5. Affichage
+    public static void afficherTourneeMST(Graph g, List<Integer> route) {
+
 
         double total = 0;
 
-        System.out.println("\n=== Tournée Approche MST ===");
+
+        System.out.println("\n=== Tournée Approche 2 (MST + DFS + Shortcutting) ===\n");
 
 
-        for (int i = 0; i < order.size() - 1; i++) {
-            int u = order.get(i);
-            int v = order.get(i+1);
+        for (int i = 0; i < route.size() - 1; i++) {
+            int u = route.get(i);
+            int v = route.get(i + 1);
 
 
             Edge e = g.getEdge(u, v);
-            System.out.println(u + " → " + v + "   (" + e.weight + " m)");
-            total += e.weight;
+
+
+            if (e != null) {
+                System.out.println(
+                        " Depuis " + u + " aller vers " + v +
+                                " via " + e.streetName +
+                                " (" + e.weight + " m)"
+                );
+                total += e.weight;
+            } else {
+                System.out.println(" Depuis " + u + " aller vers " + v + " (pas d'arête directe)");
+            }
         }
-        System.out.println("Distance totale : " + total + " m");
+
+
+        System.out.println("\n Distance totale : " + total + " m\n");
     }
+
+
+
+
 }
 
