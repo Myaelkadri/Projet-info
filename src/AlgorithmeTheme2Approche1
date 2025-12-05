@@ -1,0 +1,71 @@
+package Theme1;
+
+import java.util.*;
+
+public class AlgorithmeTheme2Approche1 {
+
+    /**
+     * Calcule un ordre de visite des points selon l'approche
+     * du Plus Proche Voisin (Nearest Neighbor).
+     *
+     * @param graph  : votre graphe (non orienté pour HO1)
+     * @param start  : sommet de départ (le dépôt D)
+     * @param points : liste des points de collecte (indices de sommets)
+     * @return liste ordonnée des sommets visités (tournée)
+    */
+
+    public List<Integer> computeRoute(Graph graph, int start, List<Integer> points) {
+
+        // copie pour éviter de modifier la liste d'origine
+        Set<Integer> unvisited = new HashSet<>(points);
+        List<Integer> route = new ArrayList<>();
+
+        int current = start;
+        route.add(current);
+
+        // Tant qu'il reste des points non visités
+        while (!unvisited.isEmpty()) {
+            int next = findNearest(graph, current, unvisited);
+
+            if (next == -1) {
+                // Erreur : pas de point atteignable
+                break;
+            }
+
+            route.add(next);
+            unvisited.remove(next);
+            current = next;
+        }
+
+        // Retour au dépôt
+        route.add(start);
+
+        return route;
+    }
+
+
+    /**
+     * Retourne le point non visité le plus proche du sommet "current".
+     *
+     * @param graph     : votre graphe
+     * @param current   : sommet actuel
+     * @param unvisited : ensemble des points à visiter
+     * @return sommet le plus proche dans unvisited
+    */
+   
+    private int findNearest(Graph graph, int current, Set<Integer> unvisited) {
+        double bestDist = Double.POSITIVE_INFINITY;
+        int bestNode = -1;
+
+        for (int candidate : unvisited) {
+            Double w = graph.getWeight(current, candidate);
+            if (w != null && w < bestDist) {
+                bestDist = w;
+                bestNode = candidate;
+            }
+        }
+
+        return bestNode;
+    }
+}
+
