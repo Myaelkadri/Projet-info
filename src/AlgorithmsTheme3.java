@@ -137,4 +137,18 @@ public class AlgorithmsTheme3 {
         return jours;
     }
 
+    public static void afficherColorationNaive(Graph g, int[] colors) {
+        System.out.println("\n=== Coloration naïve ===");
+        for (int i = 0; i < colors.length; i++) {
+            System.out.println(g.indexToName[i] + " → Jour " + colors[i]);
+        }
+    }
+
+    public static void afficherColorationWelshPowell(Graph g, int[] colors) {
+        System.out.println("\n=== Coloration Welsh & Powell ===");
+        for (int i = 0; i < colors.length; i++) {
+            System.out.println(g.indexToName[i] + " → Jour " + colors[i]);
+        }
+    }
+
 }

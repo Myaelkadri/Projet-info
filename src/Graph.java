@@ -4,6 +4,7 @@ public class Graph {
 
     int n;  // nombre de sommets
     private List<List<Edge>> adj;  // liste d’adjacence
+    public String[] indexToName;
 
     public Graph(int n) {
         this.n = n;
@@ -11,6 +12,7 @@ public class Graph {
         for (int i = 0; i < n; i++) {
             adj.add(new ArrayList<>());
         }
+        indexToName = new String[n];
     }
     public int getNbVertices() {
         return n;
@@ -90,6 +92,9 @@ public class Graph {
                 // on recrée un nouvel Edge avec les mêmes infos
                 g2.adj.get(u).add(new Edge(e.to, e.weight, e.streetName));
             }
+        }
+        if (this.indexToName != null) {
+            g2.indexToName = Arrays.copyOf(this.indexToName, this.n);
         }
 
         return g2;

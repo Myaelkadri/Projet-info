@@ -149,7 +149,12 @@ public class Main {
             sc.nextLine();
 
             if (approche == 1){
-                // Approche 1
+            Graph g = GraphLoader_theme1_2.loadGraph(filename);
+
+            int start=0;
+            List<Integer> route = AlgorithmsTheme2.computeRoutePPV(g, start);
+            AlgorithmsTheme2.afficherTourneePPV(g, route);
+
             }else if (approche == 2){
                 Graph g = GraphLoader_theme1_2.loadGraph(filename);
 
@@ -169,39 +174,21 @@ public class Main {
                 return;
             }
 
-            System.out.println("\nGraphe chargé (Thème 3) :");
-
             // Choix de l'hypothèse
             System.out.print("\nChoisir une hypothèse (1 ou 2) : ");
             int hypo = sc.nextInt();
             sc.nextLine();
 
-            // ============================================================
-            //                 HYPOTHÈSE 1 : COLORATION SIMPLE
-            // ============================================================
             if (hypo == 1) {
+                // --- Coloration naïve ---
+                int[] naiveColors = AlgorithmsTheme3.colorNaive(g);
+                AlgorithmsTheme3.afficherColorationNaive(g, naiveColors);
 
-                System.out.println("\n=== Coloration naïve ===");
-                int[] naive = AlgorithmsTheme3.colorNaive(g);
-
-                for (int i = 0; i < naive.length; i++) {
-                    System.out.println("Secteur " + i + " → Jour " + naive[i]);
-                }
-
-                System.out.println("\n=== Welsh et Powell ===");
+                // --- Welsh & Powell ---
                 int[] wp = AlgorithmsTheme3.welshPowell(g);
+                AlgorithmsTheme3.afficherColorationWelshPowell(g, wp);
 
-                for (int i = 0; i < wp.length; i++) {
-                    System.out.println("Secteur " + i + " → Jour " + wp[i]);
-                }
-
-                sc.close();
-                return;
             }
-
-            // ============================================================
-            //            HYPOTHÈSE 2 : AVEC CONTRAINTE DE CAPACITÉ
-            // ============================================================
             else if (hypo == 2) {
                 System.out.println("\nQuantités :");
                 for (int q : data.quantities) System.out.print(q + " ");
@@ -213,16 +200,12 @@ public class Main {
 
                 // 1) Coloration sans contrainte : Welsh & Powell
                 System.out.println("\n=== Welsh et Powell ===");
-                int[] colors = AlgorithmsTheme3.welshPowell(g);
-
-
-                for (int i = 0; i < colors.length; i++) {
-                    System.out.println("Secteur " + i + " → Jour " + colors[i]);
-                }
+                int[] wp = AlgorithmsTheme3.welshPowell(g);
+                AlgorithmsTheme3.afficherColorationWelshPowell(g, wp);
 
                 // 2) Planification avec la contrainte
                 List<List<Integer>> jours =
-                        AlgorithmsTheme3.planificationAvecCapacite(g, data.quantities, C, colors);
+                        AlgorithmsTheme3.planificationAvecCapacite(g, data.quantities, C,wp);
 
                 System.out.println("\n=== Planification avec contrainte ===");
 
@@ -232,15 +215,17 @@ public class Main {
 
                     // Calcul quantité totale du jour
                     int total = 0;
+
+                    System.out.print("Jour " + (i + 1) + " : ");
+
+                    // Affichage lisible des noms
                     for (int secteur : jour) {
+                        System.out.print(g.indexToName[secteur] + "  ");
                         total += data.quantities[secteur];
                     }
 
-                    System.out.println(
-                            "Jour " + (i + 1) + " : " + jour +
-                                    "  → Quantité totale = " + total);
+                    System.out.println("→ Quantité totale = " + total + " kg");
                 }
-
                 sc.close();
                 return;
             }

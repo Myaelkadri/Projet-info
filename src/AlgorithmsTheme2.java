@@ -5,35 +5,56 @@ import java.util.*;
 
 public class AlgorithmsTheme2 {
     /**
-     * Calcule un ordre de visite des points selon l'approche
-     * du Plus Proche Voisin (Nearest Neighbor).
+     * Construit la tournée PPV complète en partant du dépôt.
      *
-     * @param graph  : votre graphe (non orienté pour HO1)
-     * @param start  : sommet de départ (le dépôt D)
-     * @param points : liste des points de collecte (indices de sommets)
-     * @return liste ordonnée des sommets visités (tournée)
-    */
+     * @param graph : graphe représentant les distances
+     * @param start : sommet de départ (le dépôt)
+     * @return liste des sommets visités dans l’ordre
+     */
+    public static List<Integer> computeRoutePPV(Graph graph, int start) {
 
+        // Construire la liste des points à visiter (tous sauf le dépôt)
+        List<Integer> points = new ArrayList<>();
+        for (int i = 0; i < graph.n; i++) {
+            if (i != start) points.add(i);
+        }
+
+        // Utiliser la méthode computeRoute existante
+        AlgorithmsTheme2 algo = new AlgorithmsTheme2();
+        return algo.computeRoute(graph, start, points);
+    }
+
+
+
+    /**
+     * Calcule la tournée selon l’algorithme du Plus Proche Voisin.
+     *
+     * @param graph  : graphe utilisé
+     * @param start  : sommet de départ
+     * @param points : ensemble des points de collecte
+     * @return ordre de visite des sommets
+     */
     public List<Integer> computeRoute(Graph graph, int start, List<Integer> points) {
 
-        // copie pour éviter de modifier la liste d'origine
         Set<Integer> unvisited = new HashSet<>(points);
         List<Integer> route = new ArrayList<>();
 
         int current = start;
         route.add(current);
 
-        // Tant qu'il reste des points non visités
+        // Tant qu’il reste des points non visités
         while (!unvisited.isEmpty()) {
+
             int next = findNearest(graph, current, unvisited);
 
             if (next == -1) {
-                // Erreur : pas de point atteignable
+                System.out.println("Aucun point atteignable !");
                 break;
             }
 
             route.add(next);
             unvisited.remove(next);
+
             current = next;
         }
 
@@ -44,21 +65,18 @@ public class AlgorithmsTheme2 {
     }
 
 
+
     /**
-     * Retourne le point non visité le plus proche du sommet "current".
-     *
-     * @param graph     : votre graphe
-     * @param current   : sommet actuel
-     * @param unvisited : ensemble des points à visiter
-     * @return sommet le plus proche dans unvisited
-    */
-   
+     * Trouve le sommet non-visité le plus proche du sommet actuel.
+     */
     private int findNearest(Graph graph, int current, Set<Integer> unvisited) {
+
         double bestDist = Double.POSITIVE_INFINITY;
         int bestNode = -1;
 
         for (int candidate : unvisited) {
             Double w = graph.getWeight(current, candidate);
+
             if (w != null && w < bestDist) {
                 bestDist = w;
                 bestNode = candidate;
@@ -70,13 +88,38 @@ public class AlgorithmsTheme2 {
 
 
 
+    /**
+     * Affichage détaillé de la tournée PPV.
+     */
+    public static void afficherTourneePPV(Graph g, List<Integer> route) {
+
+        System.out.println("\n=== Tournée PPV (Plus Proche Voisin) ===");
+
+        double total = 0;
+
+        for (int i = 0; i < route.size() - 1; i++) {
+
+            int u = route.get(i);
+            int v = route.get(i + 1);
+
+            Edge e = g.getEdge(u, v);
+
+            if (e != null) {
+                System.out.println(
+                        u + " → " + v +
+                                "  (" + e.weight + " m)   via " + e.streetName
+                );
+                total += e.weight;
+            }
+        }
+
+        System.out.println("\nDistance totale = " + total + " m\n");
+    }
+
 
     // Approche 2
 
-
-// 1. PRIM — Construction de l’Arbre Couvrant Minimum (MST)
-
-
+    // 1. PRIM — Construction de l’Arbre Couvrant Minimum (MST)
     public static List<int[]> primMST(Graph g) {
         int n = g.n;
         boolean[] visited = new boolean[n];
@@ -126,9 +169,6 @@ public class AlgorithmsTheme2 {
         return mstEdges;
     }
 
-
-
-
     // 2. Construire la liste d’adjacence du MST
     private static List<List<Integer>> buildMSTAdj(int n, List<int[]> mstEdges) {
         List<List<Integer>> adj = new ArrayList<>();
@@ -144,7 +184,6 @@ public class AlgorithmsTheme2 {
         return adj;
     }
 
-
     // 3. DFS Préfixe pour donner un ordre de visite
     private static void dfs(int u, boolean[] visited, List<Integer> order, List<List<Integer>> adj) {
         visited[u] = true;
@@ -155,9 +194,6 @@ public class AlgorithmsTheme2 {
             if (!visited[v]) dfs(v, visited, order, adj);
         }
     }
-
-
-
 
     // 4. Shortcutting : supprimer les répétitions
     private static List<Integer> shortcut(List<Integer> order) {
@@ -178,9 +214,6 @@ public class AlgorithmsTheme2 {
 
         return result;
     }
-
-
-
 
     //  MST + DFS + SHORTCUTTING
     public static List<Integer> computeMSTRoute(Graph g) {
@@ -206,9 +239,6 @@ public class AlgorithmsTheme2 {
 
         return finalRoute;
     }
-
-
-
 
     // 5. Affichage
     public static void afficherTourneeMST(Graph g, List<Integer> route) {

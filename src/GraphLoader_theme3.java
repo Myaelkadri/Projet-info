@@ -4,12 +4,14 @@ import java.util.Scanner;
 public class GraphLoader_theme3 {
 
     public static class Theme3Data {
-        public Graph graph;         // le graphe des secteurs
-        public int[] quantities;    // les quantités de déchets par secteur
+        public Graph graph;          // graphe des conflits
+        public int[] quantities;     // quantités de déchets
+        public String[] names;       // noms des secteurs
 
-        public Theme3Data(Graph g, int[] q) {
+        public Theme3Data(Graph g, int[] q, String[] n) {
             this.graph = g;
             this.quantities = q;
+            this.names = n;
         }
     }
 
@@ -17,28 +19,41 @@ public class GraphLoader_theme3 {
 
         Graph g = null;
         int[] quantities = null;
+        String[] names = null;
 
         try {
             File file = new File(filename);
             Scanner sc = new Scanner(file);
 
-            // LECTURE NB SECTEURS
+            // 1. Nombre de secteurs
             int n = sc.nextInt();
             g = new Graph(n);
 
-            //LECTURE QUANTITÉS
+            // 2. Quantités
             quantities = new int[n];
             for (int i = 0; i < n; i++) {
                 quantities[i] = sc.nextInt();
             }
 
-            // LECTURE DES VOISINAGES
+            sc.nextLine(); // vider la ligne
+
+            // 3. Noms des secteurs
+            names = new String[n];
+            for (int i = 0; i < n; i++) {
+                names[i] = sc.nextLine().trim();
+            }
+
+            // Stocker les noms dans le Graph
+            g.indexToName = names;
+
+            // 4. Arêtes (conflits)
             while (sc.hasNext()) {
                 int u = sc.nextInt();
                 int v = sc.nextInt();
 
-                // Pour le thème 3, pas de poids donc on met 1 ou 0
+                // graphe non orienté
                 g.addEdge(u, v, 1, "");
+                g.addEdge(v, u, 1, "");
             }
 
             sc.close();
@@ -48,6 +63,6 @@ public class GraphLoader_theme3 {
             e.printStackTrace();
         }
 
-        return new Theme3Data(g, quantities);
+        return new Theme3Data(g, quantities, names);
     }
 }

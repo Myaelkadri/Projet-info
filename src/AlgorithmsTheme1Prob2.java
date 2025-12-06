@@ -114,7 +114,7 @@ public class AlgorithmsTheme1Prob2 {
         int u = odd.get(0);
         int v = odd.get(1);
 
-        System.out.println("Deux sommets impairs trouvés : " + u + " et " + v);
+        System.out.println("\nDeux sommets impairs trouvés : " + u + " et " + v);
 
         // 2. Trouver le plus court chemin entre u et v
         AlgorithmsTheme1Prob1.PathResult pr = AlgorithmsTheme1Prob1.dijkstra(g, u);
