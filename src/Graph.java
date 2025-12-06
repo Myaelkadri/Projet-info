@@ -83,8 +83,7 @@ public class Graph {
         // nouveau graphe avec le même nombre de sommets
         Graph g2 = new Graph(this.n);
 
-        // si tu as un champ "oriented" dans Graph, garde-le
-        // g2.oriented = this.oriented;
+
 
         // recopier toute la liste d’adjacence
         for (int u = 0; u < this.n; u++) {

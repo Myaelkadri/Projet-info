@@ -35,10 +35,10 @@ public class Main {
 
             if (prob == 1){
                 System.out.print("\nChoisir une hypothese (1 ou 2) : ");
-                int theme1prob1 = sc.nextInt();
+                int hypothese = sc.nextInt();
                 sc.nextLine();
 
-                if (theme1prob1 == 1){
+                if (hypothese == 1){
                     System.out.print("\n=== Theme 1 Problematique 1  hypothese 1 ===");
 
                     System.out.print("\nSource : ");
@@ -66,7 +66,8 @@ public class Main {
 
 
                 }
-                else if( theme1prob1 == 2){
+
+                else if( hypothese == 2){
                     System.out.print("\n=== Theme 1 Problematique 1  hypothese 2 ===");
 
 
@@ -101,10 +102,10 @@ public class Main {
             }
             else if(prob == 2){
                 System.out.print("\nChoisir une cas (1 ou 2 ou 3) : ");
-                int theme1prob2 = sc.nextInt();
+                int cas = sc.nextInt();
                 sc.nextLine();
 
-                if (theme1prob2 == 1){
+                if (cas == 1){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 1 ===");
 
 
@@ -120,7 +121,7 @@ public class Main {
                     }
                 }
 
-                else if(theme1prob2 == 2){
+                else if(cas == 2){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 2 ===");
 
                         List<Integer> odd = AlgorithmsTheme1Prob2.findOddVertices(g);
@@ -133,7 +134,7 @@ public class Main {
                         }
 
                 }
-                else if( theme1prob2 == 3){
+                else if( cas == 3){
                     System.out.print("\n=== Theme 1 Problematique 2  Cas 3 ===");
                     List<Integer> tour = AlgorithmsTheme1Prob2.cas3_CPP(g);
                     AlgorithmsTheme1Prob2.afficher(g, tour);
@@ -141,7 +142,6 @@ public class Main {
                 }
             }
         }
-
         else if (theme ==2){
 
             System.out.print("\nChoisir une Approche (1 ou 2) : ");
@@ -155,7 +155,8 @@ public class Main {
             List<Integer> route = AlgorithmsTheme2.computeRoutePPV(g, start);
             AlgorithmsTheme2.afficherTourneePPV(g, route);
 
-            }else if (approche == 2){
+            }
+            else if (approche == 2){
                 Graph g = GraphLoader_theme1_2.loadGraph(filename);
 
                 List<Integer> route = AlgorithmsTheme2.computeMSTRoute(g);
